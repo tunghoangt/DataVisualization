@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import DataHandler from './DataHandler.js'
 
 function App() {
   return (
