@@ -10,7 +10,8 @@ class DataHandler extends Component {
     this.state = {
       year: "all",
       usState: "all",
-      fish: "all"
+      fish: "all",
+      aggregateBy: "Dollars" // or Pounds or Dollars/Pound
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -28,7 +29,7 @@ class DataHandler extends Component {
   }
 
   // FILTRATIONS BY STATE
-  // TODO: these can be made generic
+  // TODO: these can be made generic (i.e. should just be in some componentUpdate function)
   filterByYear(data) {
     return this.state.year === "all" ? data : data.filter(d => d['Year'] === this.state.year)
   };
@@ -43,14 +44,15 @@ class DataHandler extends Component {
 
   // DATA AGGREGATIONS (remember to ignore null)
   sumByKey = (acc, tup) => {
-    let key = Object.keys(tup)[0]
-    key in acc ? acc[key]+= tup.value : acc[key] = tup.value
+    const key = tup[0]
+    const val = Number(tup[1])
+    acc[key] ? acc[key]+= val : acc[key] = val
+    return acc
   }
 
-  // COMPONENT
   componentDidMount() {
     d3.csv(landings).then( data => {
-      console.log(this.filterByYear(data)[0])
+      console.log(data.map(x => [x["State"], x["Dollars"]]).reduce(this.sumByKey, {}))
     }).catch( err => {
       throw err
     })
