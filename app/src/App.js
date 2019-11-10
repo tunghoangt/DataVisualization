@@ -3,6 +3,8 @@ import logo from './logo.svg';
 import './App.css';
 import DataHandler from './DataHandler.js'
 
+// https://reactjs.org/docs/faq-state.html
+
 function App() {
   return (
     <div className="App">
@@ -20,6 +22,7 @@ function App() {
           Learn React
         </a>
       </header>
+      <DataHandler />
     </div>
   );
 }

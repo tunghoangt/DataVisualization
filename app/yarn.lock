@@ -8229,6 +8229,13 @@ react-app-polyfill@^1.0.4:
     regenerator-runtime "0.13.3"
     whatwg-fetch "3.0.0"
 
+react-csv-reader@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/react-csv-reader/-/react-csv-reader-2.0.2.tgz#6698622e110901f6d3a3d24d0c0d61528a9af2ff"
+  integrity sha512-zBvGyNylBfNbDq3oEzjDwVgoLSzY7gkjRPtefUWS2a4rN4G4rgnkzkpwOktCP7Ma08BFPxXBP2gF93sqwKtYqQ==
+  dependencies:
+    papaparse "^5.1.0"
+
 react-dev-utils@^9.1.0:
   version "9.1.0"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-9.1.0.tgz#3ad2bb8848a32319d760d0a84c56c14bdaae5e81"
