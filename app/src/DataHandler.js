@@ -42,17 +42,29 @@ class DataHandler extends Component {
     return this.state.fish === "all" ? data : data.filter(d => d['AFS Name'] === this.state.fish)
   };
 
-  // DATA AGGREGATIONS (remember to ignore null)
+  filterNaN = (record) => {
+    return !isNaN(Number(record[1]))
+  }
+
+  // DATA AGGREGATIONS
+  // TODO: some of the state names are messy
   sumByKey = (acc, tup) => {
     const key = tup[0]
     const val = Number(tup[1])
-    acc[key] ? acc[key]+= val : acc[key] = val
-    return acc
+    if (isNaN(val)) {
+      return acc
+    } else {
+      acc[key] ? acc[key]+= val : acc[key] = val
+      return acc
+    }
   }
 
   componentDidMount() {
     d3.csv(landings).then( data => {
-      console.log(data.map(x => [x["State"], x["Dollars"]]).reduce(this.sumByKey, {}))
+      let aggData = data.map(x => [x["State"], x[this.state.aggregateBy]])
+                        .filter(this.filterNaN)
+                        .reduce(this.sumByKey, {});
+      console.log(aggData)
     }).catch( err => {
       throw err
     })
