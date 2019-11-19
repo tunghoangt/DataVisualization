@@ -1,10 +1,10 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Slider from './Slider';
+import NewSlider from './Slider';
 
 const App = () => {
-  return ( <Slider /> )
+  return ( <NewSlider /> )
 }
 
 function App() {

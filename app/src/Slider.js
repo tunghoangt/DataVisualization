@@ -17,7 +17,7 @@ function formatTick(ms) {
 const oneYear = 1000 * 60 * 60 * 24 * 365;
 
 // Time
-class Slider2 extends Component {
+class NewSlider extends Component {
 	constructor() {
 	    super();
 
@@ -31,7 +31,10 @@ class Slider2 extends Component {
 	      min: startYear,
 	      max: endYear
 	    };
+	    
+	  	this.onChange = this.onChange.bind(this)
 	  }
+
 
 	  onChange = ([ms]) => {
 	    this.setState({
@@ -133,4 +136,4 @@ class Slider2 extends Component {
 	  }
 }
 
-export default Slider2
+export default NewSlider
