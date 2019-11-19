@@ -134,7 +134,7 @@ class BarChart extends React.Component
             .attr('fill', '#000')
             .style('font-size', '20px')
             .style('text-anchor', 'middle')
-            .text('Production in '+unit);
+            .text('Production in '+unit +", "+ year);
 
         const yGridlines = d3.axisLeft()
             .scale(this.state.yScale)
