@@ -1,6 +1,11 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import NewSlider from './Slider';
+
+const App = () => {
+  return ( <NewSlider /> )
+}
 
 function App() {
   return (
