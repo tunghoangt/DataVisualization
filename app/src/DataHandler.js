@@ -3,6 +3,8 @@ import * as d3 from 'd3';
 import landings from './data/landings.csv';
 // FIELDS: Year, State, AFS Name, Pounds, Dollars, TSN, Collection, Confidentiality
 
+// https://reactjs.org/docs/lifting-state-up.html
+
 class DataHandler extends Component {
 
   constructor(props) {
@@ -51,12 +53,8 @@ class DataHandler extends Component {
   sumByKey = (acc, tup) => {
     const key = tup[0]
     const val = Number(tup[1])
-    if (isNaN(val)) {
-      return acc
-    } else {
-      acc[key] ? acc[key]+= val : acc[key] = val
-      return acc
-    }
+    acc[key] ? acc[key]+= val : acc[key] = val
+    return acc
   }
 
   componentDidMount() {
