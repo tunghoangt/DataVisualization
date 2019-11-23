@@ -1,9 +1,11 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import DataHandler from './DataHandler.js'
+import NewSlider from './Slider';
 
-// https://reactjs.org/docs/faq-state.html
+const App = () => {
+  return ( <NewSlider /> )
+}
 
 function App() {
   return (
