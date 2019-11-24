@@ -1,32 +1,23 @@
 import React from 'react';
+import { Provider } from 'react-redux';
+
 import logo from './logo.svg';
 import './App.css';
 import NewSlider from './Slider';
+import DataHandler from './DataHandler.js';
+import BarChart from './BarChart.js';
+
+// create React Redux store where data lives (and gets passed to all visualizations)
+
 
 const App = () => {
-  return ( <NewSlider /> )
-}
-
-function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
       <DataHandler />
+      <NewSlider />
+      <BarChart />
     </div>
-  );
+  )
 }
 
 export default App;

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
 import { Slider, Rail, Handles, Tracks, Ticks } from "react-compound-slider";
-import { SliderRail, Handle, Track, Tick } from "./components"; // example render components - source below
+import { Handle, Track, Tick } from "./SliderComponents";
 import { format} from "date-fns";
 import { scaleTime } from "d3-scale";
 
@@ -9,6 +9,16 @@ const sliderStyle = {
   position: "relative",
   width: "100%"
 };
+
+const railStyle = {
+  position: "absolute",
+  width: "100%",
+  height: 8,
+  borderRadius: 4,
+  cursor: "pointer",
+  backgroundColor: "rgb(100,100,100)"
+};
+
 
 function formatTick(ms) {
   return format(new Date(ms), "yyyy");
@@ -31,7 +41,7 @@ class NewSlider extends Component {
 	      min: startYear,
 	      max: endYear
 	    };
-	    
+
 	  	this.onChange = this.onChange.bind(this)
 	  }
 
@@ -84,9 +94,11 @@ class NewSlider extends Component {
 	            onChange={this.onChange}
 	            values={[+selected]}
 	          >
-	            <Rail>
-	              {({ getRailProps }) => <SliderRail getRailProps={getRailProps} />}
-	            </Rail>
+            <Rail>
+              {({ getRailProps }) => (
+                <div style={railStyle} {...getRailProps()} />
+              )}
+            </Rail>
 	            <Handles>
 	              {({ handles, getHandleProps }) => (
 	                <div>
