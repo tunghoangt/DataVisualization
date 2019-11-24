@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { render } from "react-dom";
 import { Slider, Rail, Handles, Tracks, Ticks } from "react-compound-slider";
 import { Handle, Track, Tick } from "./SliderComponents";
-import { format} from "date-fns";
+import { format } from "date-fns";
 import { scaleTime } from "d3-scale";
 
 const sliderStyle = {

@@ -5,7 +5,32 @@ import landings from './data/landings.csv';
 
 // https://reactjs.org/docs/lifting-state-up.html
 
-class DataHandler extends Component {
+class Loader {
+
+  constructor() {
+    this.state = {
+      year: "all",
+      usState: "all",
+      species: "all",
+      aggregateBy: "dollars"
+    }
+  }
+
+  loadData() {
+    d3.csv(landings).then( data => {
+      let aggData = data.map(x => [x["State"], x[this.state.aggregateBy]])
+                        .filter(this.filterNaN)
+                        .reduce(this.sumByKey, {});
+      console.log(aggData)
+      return(aggData);
+    }).catch( err => {
+      throw err
+    })
+  }
+
+}
+
+class DataLoader extends Component {
 
   constructor(props) {
     super(props);
@@ -13,7 +38,7 @@ class DataHandler extends Component {
       year: "all",
       usState: "all",
       fish: "all",
-      aggregateBy: "Dollars" // or Pounds or Dollars/Pound
+      aggregateBy: "Dollars" // or Pounds
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -113,4 +138,4 @@ class DataHandler extends Component {
 
 };
 
-export default DataHandler;
+export default DataLoader;
