@@ -12,7 +12,7 @@ class Loader {
     }
   }
 
-  async loadData(year, usState, species, aggregateBy) {
+  loadData(year, usState, species, aggregateBy) {
     return d3.csv(landings).then( data => {
       let aggData = data.map(x => [x["State"], x[this.filters.aggregateBy]])
                         .filter(this.filterNaN)

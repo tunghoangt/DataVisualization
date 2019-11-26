@@ -28,7 +28,9 @@ function formatTick(ms) {
 
 const oneYear = 1000 * 60 * 60 * 24 * 365;
 
-// Time
+/**
+  * A slider which controls the year (dispatchs actions), but does not subscribe to redux store.
+  */
 class NewSlider extends Component {
 	constructor() {
 	    super();

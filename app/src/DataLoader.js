@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 import landings from './data/landings.csv';
 // FIELDS: Year, State, AFS Name, Pounds, Dollars, TSN, Collection, Confidentiality
-
+// TODO: this can be removed
 // https://reactjs.org/docs/lifting-state-up.html
 
+/**
+  * Helper class to handle loading of landings csv file.
+  */
 class Loader {
 
   constructor() {

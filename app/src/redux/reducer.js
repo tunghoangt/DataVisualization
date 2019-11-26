@@ -1,11 +1,11 @@
 import Loader from './loader';
 
-const initialState = {
+const initialState = [{
   year: "all",
   usState: "all",
   species: "all", // hard code this for now so it runs
   aggregateBy: "Dollars"
-};
+}];
 
 let loader = new Loader();
 
