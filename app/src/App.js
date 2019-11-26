@@ -17,7 +17,6 @@ const App = () => {
   return (
     <div className="App">
       <NewSlider />
-      <BarChart />
     </div>
   )
 }

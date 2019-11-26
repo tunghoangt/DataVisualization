@@ -5,6 +5,8 @@ import { Handle, Track, Tick } from "./SliderComponents";
 import { format } from "date-fns";
 import { scaleTime } from "d3-scale";
 
+// TODO: this just needs a dispatch action to change the year, doesn't need to subscribe
+
 const sliderStyle = {
   position: "relative",
   width: "100%"

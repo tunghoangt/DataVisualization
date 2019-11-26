@@ -8,17 +8,16 @@ class Loader {
       year: "all",
       usState: "all",
       species: "all",
-      aggregateBy: "dollars"
+      aggregateBy: "Dollars" // or "Pounds"
     }
   }
 
-  // TODO: remove hard-coded "State"
-  loadData(year, usState, species, aggregateBy) {
-    d3.csv(landings).then( data => {
+  async loadData(year, usState, species, aggregateBy) {
+    return d3.csv(landings).then( data => {
       let aggData = data.map(x => [x["State"], x[this.filters.aggregateBy]])
                         .filter(this.filterNaN)
                         .reduce(this.sumByKey, {})
-      return aggData ;
+      return aggData;
     }).catch( err => {
       throw err
     })
@@ -36,7 +35,7 @@ class Loader {
   sumByKey = (acc, tup) => {
     const key = tup[0]
     const val = Number(tup[1])
-    acc[key] ? acc[key]+= val : acc[key] = val
+    acc[key] ? acc[key] += val : acc[key] = val
     return acc
   };
 

@@ -3,22 +3,26 @@
  */
 import React from "react";
 import * as d3 from "d3";
-import store from './redux/store';
+import mapStateToProps from './redux/helpers';
+import { connect } from 'react-redux';
 
 const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 const format = d3.format(",");
+
+// TODO: this just needs to subscribe to changes in store, doesn't dispatch actions
 
 class BarChart extends React.Component
 {
     constructor(props){
         super(props);
-        this.species = store.getState().species;
-        this.usState = store.getState().usState;
-        this.year = store.getState().year;
-        this.aggregateBy = store.getState().aggregateBy;
+        this.species = props.species;
+        this.usState = props.usState;
+        this.year = props.year;
+        this.aggregateBy = props.aggregateBy;
+        this.data = props.data;
+        console.log(this.data)
 
         this.state = {
-            data: [],
             sort: true,
             species: [...this.species].sort((a, b) => b.value - a.value),
             xScale : d3
@@ -32,33 +36,33 @@ class BarChart extends React.Component
                 .range([this.props.height - this.props.top - this.props.bottom, 0])
                 .domain([0, d3.max(this.species, d => d.value)])
         };
-
-        store.subscribe(() => {
-          this.setState({
-            data: store.data
-          })
-        });
+        //
+        // store.subscribe(() => {
+        //   this.setState({
+        //     data: store.data
+        //   })
+        // });
     }
 
-    setLocalState(){
+    setLocalState() {
         this.setState({
-            species: [...this.props.data.species].sort((a, b) => b.value - a.value),
+            species: [...this.species].sort((a, b) => b.value - a.value),
             xScale : d3
                 .scaleBand()
                 .range([0, this.props.width - this.props.left - this.props.right])
-                .domain([...this.props.data.species].sort((a, b) => b.value - a.value).map(d => d.name))
+                .domain([...this.species].sort((a, b) => b.value - a.value).map(d => d.name))
                 .padding(0.1),
 
             yScale : d3
                 .scaleLinear()
                 .range([this.props.height - this.props.top - this.props.bottom, 0])
-                .domain([0, d3.max(this.props.data.species, d => d.value)])
+                .domain([0, d3.max(this.species, d => d.value)])
         })
     }
 
     componentDidUpdate(prevProps) {
-        if(this.props.data.state !== prevProps.data.state || this.props.data.unit !== prevProps.data.unit
-            || this.props.data.year !== prevProps.data.year||this.props.data.species !== prevProps.data.species){
+        if(this.props.usState !== prevProps.usState || this.props.aggregateBy !== prevProps.aggregateBy
+            || this.props.year !== prevProps.year || this.props.species !== prevProps.species){
             this.setLocalState();
         }
         this.drawChart();
@@ -71,9 +75,6 @@ class BarChart extends React.Component
         var div = d3.select("body").append("div")
             .attr("class", "tooltip")
             .style("opacity", 0);
-
-        var state = this.usState;
-        var year = this.year;
 
         chart.selectAll('.bar')
             .data(this.species)
@@ -184,4 +185,4 @@ class BarChart extends React.Component
     }
 };
 
-export default BarChart;
+export default connect(mapStateToProps)(BarChart);
