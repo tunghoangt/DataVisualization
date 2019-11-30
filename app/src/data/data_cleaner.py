@@ -12,8 +12,8 @@ for raw_row in raw_rows:
                 'Year': int(year),
                 'State': state.replace('*',''),
                 'Species': species,
-                'Pounds': int(pounds),
-                'Dollars': int(dollars),
+                'Pounds': int(pounds.replace(',','')),
+                'Dollars': int(dollars.replace(',','')),
                 'Collection': collection,
                 'Confidentiality': confidentiality
               }
