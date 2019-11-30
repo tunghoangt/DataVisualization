@@ -1,7 +1,7 @@
 
 // helper f'n to pull out variables from redux-store & pass
 // to each React Component (for onChange in any)
-export const mapStateToProps = (state) => {
+const mapStateToProps = (state) => {
   return {
     species: state.species,
     usState: state.usState,

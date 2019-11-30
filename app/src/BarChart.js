@@ -6,6 +6,7 @@ import * as d3 from "d3";
 import mapStateToProps from './redux/helpers';
 import { connect } from 'react-redux';
 
+
 const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 const format = d3.format(",");
 
@@ -22,7 +23,7 @@ class BarChart extends React.Component {
         this.aggregateBy = "species";
         this.data = {
           usState: 'New York',
-          aggregateBy: 'pounds',
+          aggregateBy: 'Pounds',
           year: 2015,
           species: [
             {name: 'AMBERJACK, GREATER', value: 2000},
@@ -35,6 +36,7 @@ class BarChart extends React.Component {
         };
 
         this.state = {
+            data: this.data,
             sort: true,
             species: [...this.data.species].sort((a, b) => b.value - a.value),
             xScale : d3
@@ -58,23 +60,23 @@ class BarChart extends React.Component {
 
     setLocalState() {
         this.setState({
-            species: [...this.data.species].sort((a, b) => b.value - a.value),
+            species: [...this.state.data.species].sort((a, b) => b.value - a.value),
             xScale : d3
                 .scaleBand()
                 .range([0, this.props.width - this.props.left - this.props.right])
-                .domain([...this.data.species].sort((a, b) => b.value - a.value).map(d => d.name))
+                .domain([...this.state.data.species].sort((a, b) => b.value - a.value).map(d => d.name))
                 .padding(0.1),
 
             yScale : d3
                 .scaleLinear()
                 .range([this.props.height - this.props.top - this.props.bottom, 0])
-                .domain([0, d3.max(this.data.species, d => d.value)])
+                .domain([0, d3.max(this.state.data.species, d => d.value)])
         })
     };
 
     componentDidUpdate(prevProps) {
-        if(this.data.usState !== prevProps.usState || this.data.aggregateBy !== prevProps.aggregateBy
-            || this.data.year !== prevProps.year || this.data.species !== prevProps.species){
+        if(this.state.usState !== prevProps.usState || this.state.aggregateBy !== prevProps.aggregateBy
+            || this.state.year !== prevProps.year || this.state.species !== prevProps.state.species){
             this.setLocalState();
         }
         this.drawChart();
@@ -90,7 +92,7 @@ class BarChart extends React.Component {
                     .style("opacity", 0);
 
         chart.selectAll('.bar')
-             .data(this.species)
+             .data(this.state.data.species)
              .enter()
              .append('rect')
              .classed('bar', true)
@@ -103,7 +105,7 @@ class BarChart extends React.Component {
                 div.transition()
                    .duration(200)
                    .style("opacity", .9);
-                div.html("Spec: "+ d.name + "<br/> Value: "+ d.value +"</br> State: " + this.data.usState +"<br/>Year: "  + this.data.year)
+                div.html("Spec: "+ d.name + "<br/> Value: "+ d.value +"</br> State: " + this.state.data.usState +"<br/>Year: "  + this.state.data.year)
                    .style("left", (d3.event.pageX) + "px")
                    .style("top", (d3.event.pageY - 28) + "px");
              })
@@ -114,7 +116,7 @@ class BarChart extends React.Component {
              });
 
        chart.selectAll('.bar-label')
-            .data(this.data.species)
+            .data(this.state.data.species)
             .enter()
             .append('text')
             .classed('bar-label', true)
@@ -160,7 +162,7 @@ class BarChart extends React.Component {
              .attr('fill', '#000')
              .style('font-size', '20px')
              .style('text-anchor', 'middle')
-             .text('Production in '+ this.data.aggregateBy + ", " + this.data.year);
+             .text('Production in '+ this.state.data.aggregateBy + ", " + this.state.data.year);
 
         const yGridlines = d3.axisLeft()
                              .scale(this.state.yScale)
@@ -210,9 +212,9 @@ class BarChart extends React.Component {
                     left={80}
                     right={40}
           />
-        </div>
-        );
-    }
+          </div>
+        )
+    };
 };
 
 export default connect(mapStateToProps)(BarChart);

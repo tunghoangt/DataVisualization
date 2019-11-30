@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+import changeYear from './redux/actions';
+import mapStateToProps from './redux/helpers';
+import { connect } from 'react-redux';
 import { render } from "react-dom";
 import { Slider, Rail, Handles, Tracks, Ticks } from "react-compound-slider";
 import { Handle, Track, Tick } from "./SliderComponents";
@@ -32,8 +35,8 @@ const oneYear = 1000 * 60 * 60 * 24 * 365;
   * A slider which controls the year (dispatchs actions), but does not subscribe to redux store.
   */
 class NewSlider extends Component {
-	constructor() {
-	    super();
+	constructor(props) {
+	    super(props);
 
 	   	const defaultYear = new Date(1950, 3, 3);
 	    const startYear = new Date(1950, 3, 3);
@@ -50,6 +53,7 @@ class NewSlider extends Component {
 	  }
 
 
+    // TODO: this dispatchs the change year action
 	  onChange = ([ms]) => {
 	    this.setState({
 	      selected: new Date(ms)
@@ -152,4 +156,4 @@ class NewSlider extends Component {
 	  }
 }
 
-export default NewSlider
+export default connect(mapStateToProps)(NewSlider)
