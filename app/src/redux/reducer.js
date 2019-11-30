@@ -7,18 +7,21 @@ import {
 } from './actions';
 
 
-const initialState = [{
+const initialState = {
   year: "all",
   usState: "all",
-  species: "all", // hard code this for now so it runs
+  species: "all",
   aggregateBy: "Dollars"
-}];
+};
 
 let loader = new Loader();
 
-// TODO: this just have to recieve a new state right, there's not really any actions per se, just new states
 async function reducer(state = initialState, action) {
-  console.log("action = ", action)
+
+  console.log("state = ", state)
+  console.log("action.type = ", action.type)
+
+  // TODO: this seems to be returning a promise; figure out how to get the state out
   switch(action.type) {
     case CHANGE_YEAR:
       var data = await loader.loadData(action.year, state.usState, state.species, state.aggregateBy)

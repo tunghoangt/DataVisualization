@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import changeYear from './redux/actions';
+import { changeYear } from './redux/actions';
 import mapStateToProps from './redux/helpers';
 import { connect } from 'react-redux';
 import { render } from "react-dom";
@@ -7,8 +7,6 @@ import { Slider, Rail, Handles, Tracks, Ticks } from "react-compound-slider";
 import { Handle, Track, Tick } from "./SliderComponents";
 import { format } from "date-fns";
 import { scaleTime } from "d3-scale";
-
-// TODO: this just needs a dispatch action to change the year, doesn't need to subscribe
 
 const sliderStyle = {
   position: "relative",
@@ -50,20 +48,27 @@ class NewSlider extends Component {
 	    };
 
 	  	this.onChange = this.onChange.bind(this)
+      this.onUpdate = this.onUpdate.bind(this)
 	  }
 
-
-    // TODO: this dispatchs the change year action
 	  onChange = ([ms]) => {
+      let date = new Date(ms)
 	    this.setState({
-	      selected: new Date(ms)
+	      selected: date
 	    });
+
+      let year = date.getFullYear()
+      this.props.dispatch(changeYear(year))
 	  };
 
 	  onUpdate = ([ms]) => {
+      let date = new Date(ms)
 	    this.setState({
-	      updated: new Date(ms)
+	      updated: date
 	    });
+
+      let year = date.getFullYear()
+      this.props.dispatch(changeYear(year))
 	  };
 
 	  renderDateTime(date, header) {
