@@ -24,7 +24,7 @@ class BarChart extends React.Component {
         this.data = {
           usState: 'New York',
           aggregateBy: 'Pounds',
-          year: 2015,
+          year: '2015',
           species: [
             {name: 'AMBERJACK, GREATER', value: 2000},
             {name: 'AMBERJACK, LESSER', value: 2100},
@@ -60,17 +60,17 @@ class BarChart extends React.Component {
 
     setLocalState() {
         this.setState({
-            species: [...this.state.data.species].sort((a, b) => b.value - a.value),
+            species: [...this.data.species].sort((a, b) => b.value - a.value),
             xScale : d3
                 .scaleBand()
                 .range([0, this.props.width - this.props.left - this.props.right])
-                .domain([...this.state.data.species].sort((a, b) => b.value - a.value).map(d => d.name))
+                .domain([...this.data.species].sort((a, b) => b.value - a.value).map(d => d.name))
                 .padding(0.1),
 
             yScale : d3
                 .scaleLinear()
                 .range([this.props.height - this.props.top - this.props.bottom, 0])
-                .domain([0, d3.max(this.state.data.species, d => d.value)])
+                .domain([0, d3.max(this.data.species, d => d.value)])
         })
     };
 
@@ -92,7 +92,7 @@ class BarChart extends React.Component {
                     .style("opacity", 0);
 
         chart.selectAll('.bar')
-             .data(this.state.data.species)
+             .data(this.data.species)
              .enter()
              .append('rect')
              .classed('bar', true)
@@ -105,7 +105,7 @@ class BarChart extends React.Component {
                 div.transition()
                    .duration(200)
                    .style("opacity", .9);
-                div.html("Spec: "+ d.name + "<br/> Value: "+ d.value +"</br> State: " + this.state.data.usState +"<br/>Year: "  + this.state.data.year)
+                div.html("Spec: "+ d.name + "<br/> Value: "+ d.value +"</br> State: " + this.data.usState +"<br/>Year: "  + this.data.year)
                    .style("left", (d3.event.pageX) + "px")
                    .style("top", (d3.event.pageY - 28) + "px");
              })
@@ -116,7 +116,7 @@ class BarChart extends React.Component {
              });
 
        chart.selectAll('.bar-label')
-            .data(this.state.data.species)
+            .data(this.data.species)
             .enter()
             .append('text')
             .classed('bar-label', true)
@@ -162,7 +162,7 @@ class BarChart extends React.Component {
              .attr('fill', '#000')
              .style('font-size', '20px')
              .style('text-anchor', 'middle')
-             .text('Production in '+ this.state.data.aggregateBy + ", " + this.state.data.year);
+             .text('Production in '+ this.data.aggregateBy + ", " + this.data.year);
 
         const yGridlines = d3.axisLeft()
                              .scale(this.state.yScale)
@@ -199,19 +199,10 @@ class BarChart extends React.Component {
         return this.drawChart()
     }
 
-    // TODO: add s.t. it shows the chart
+    // TODO: add s.t. it shows the chart!
     render() {
         return (
-          <div style={{float: 'left', width: '600px', height: '400px'}}>
-          <BarChart id="chart1"
-                    data={this.state.data}
-                    width={550}
-                    height={400}
-                    top={50}
-                    bottom={80}
-                    left={80}
-                    right={40}
-          />
+          <div id={this.props.id}>
           </div>
         )
     };
