@@ -18,8 +18,7 @@ let loader = new Loader();
 
 async function reducer(state = initialState, action) {
 
-  // TODO: somehow it doesn't return the whole state, just the delta? state is undefined here
-  // so just update local state of component in the action, then we just need to return once at bottom
+  // TODO: make sure we're just calling loadData() once at bottom
   switch(action.type) {
     case CHANGE_YEAR:
       loader.updateState("Year", action.year.toString())

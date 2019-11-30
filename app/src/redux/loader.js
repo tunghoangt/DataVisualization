@@ -3,11 +3,13 @@ import landings from '../data/landings.csv';
 
 class Loader {
 
+  // TODO: clean data s.t. AFS Name |-> Species
+  /*Fields: "AFS Name",Collection,Confidentiality,Dollars,Pounds,State,Year*/
   constructor() {
     this.filters = {
       Year: "all",
-      usState: "all",
-      species: "all",
+      State: "all",
+      Species: "all",
       aggregateBy: "Dollars" // or "Pounds"
     }
 
