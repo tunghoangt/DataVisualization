@@ -37,7 +37,6 @@ class Loader {
     return this.filters[key] === "all" ? data : data.filter(d => d[key] === this.filters[key])
   };
 
-  // TODO: this shouldn't be hard-coded like this (esp when loadData moves)
   filterNaN = (record) => {
     return !isNaN(Number(record[1]))
   };

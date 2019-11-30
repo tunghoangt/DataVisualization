@@ -31,6 +31,7 @@ async function reducer(state = initialState, action) {
       var data = await loader.loadData()
       return Object.assign({}, state, data)
     case CHANGE_UNIT:
+      loader.updateState("aggregateBy", action.unit)
       var data = await loader.loadData()
       return Object.assign({}, state, data)
     default:
