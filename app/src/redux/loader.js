@@ -5,18 +5,26 @@ class Loader {
 
   constructor() {
     this.filters = {
-      year: "all",
+      Year: "all",
       usState: "all",
       species: "all",
       aggregateBy: "Dollars" // or "Pounds"
     }
+
+    this.updateState.bind(this)
   }
 
-  loadData(year, usState, species, aggregateBy) {
+  // TODO: we can probably merge this to make loadDataOnDelta
+  updateState = (key, value) => {
+    this.filters[key] = value
+  }
+
+  loadData() {
     return d3.csv(landings).then( data => {
-      let aggData = data.map(x => [x["State"], x[this.filters.aggregateBy]])
-                        .filter(this.filterNaN)
-                        .reduce(this.sumByKey, {})
+      const filteredByYear = this.filterByKey("Year", data)
+      const aggData = filteredByYear.map(x => [x["State"], x[this.filters.aggregateBy]])
+                                    .filter(this.filterNaN)
+                                    .reduce(this.sumByKey, {})
       return aggData;
     }).catch( err => {
       throw err

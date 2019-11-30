@@ -18,25 +18,24 @@ let loader = new Loader();
 
 async function reducer(state = initialState, action) {
 
-  console.log("state = ", state)
-  console.log("action.type = ", action.type)
-
-  // TODO: this seems to be returning a promise; figure out how to get the state out
+  // TODO: somehow it doesn't return the whole state, just the delta? state is undefined here
+  // so just update local state of component in the action, then we just need to return once at bottom
   switch(action.type) {
     case CHANGE_YEAR:
-      var data = await loader.loadData(action.year, state.usState, state.species, state.aggregateBy)
+      loader.updateState("Year", action.year.toString())
+      var data = await loader.loadData()
       return Object.assign({}, state, data)
     case CHANGE_US_STATE:
-      var data = await loader.loadData(state.year, action.usState, state.species, state.aggregateBy)
+      var data = await loader.loadData()
       return Object.assign({}, state, data)
     case CHANGE_SPECIES:
-      var data = await loader.loadData(state.year, state.usState, action.species, state.aggregateBy)
+      var data = await loader.loadData()
       return Object.assign({}, state, data)
     case CHANGE_UNIT:
-      var data = await loader.loadData(state.year, state.usState, state.species, action.aggregateBy)
+      var data = await loader.loadData()
       return Object.assign({}, state, data)
     default:
-      var data = await loader.loadData(state.year, state.usState, state.species, state.aggregateBy)
+      var data = await loader.loadData()
       return Object.assign({}, state, data)
   };
 
