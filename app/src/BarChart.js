@@ -85,22 +85,24 @@ class BarChart extends React.Component {
 
     setLocalState() {
         this.setState({
-            species: [...this.data.species].sort((a, b) => b.value - a.value),
             xScale : d3
                 .scaleBand()
                 .range([0, this.props.width - this.props.left - this.props.right])
-                .domain([...this.data.species].sort((a, b) => b.value - a.value).map(d => d.name))
+                .domain([...this.state.displayData].sort((a, b) => b.value - a.value).map(d => d.name))
                 .padding(0.1),
 
             yScale : d3
                 .scaleLinear()
                 .range([this.props.height - this.props.top - this.props.bottom, 0])
-                .domain([0, d3.max(this.data.species, d => d.value)])
+                .domain([0, d3.max(this.state.displayData, d => d.value)])
         })
     };
 
     // TODO: should check prevProps
-    componentDidUpdate() {
+    componentDidUpdate(prevProps, prevState) {
+      if (prevState.displayData !== this.state.displayData) {
+        this.setLocalState()
+      }
       this.drawChart();
     };
 
