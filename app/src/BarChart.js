@@ -51,7 +51,7 @@ class BarChart extends React.Component {
             yScale : d3
                 .scaleLinear()
                 .range([this.props.height - this.props.top - this.props.bottom, 0])
-                .domain([0, d3.max(this.data.species, d => d.value)])
+                .domain([0, d3.max(this.data.species, d => d.value) * 1.5])
         };
 
         store.subscribe(() => {
@@ -94,11 +94,10 @@ class BarChart extends React.Component {
             yScale : d3
                 .scaleLinear()
                 .range([this.props.height - this.props.top - this.props.bottom, 0])
-                .domain([0, d3.max(this.state.displayData, d => d.value)])
+                .domain([0, d3.max(this.state.displayData, d => d.value) * 1.1])
         })
     };
 
-    // TODO: should check prevProps
     componentDidUpdate(prevProps, prevState) {
       if (prevState.displayData !== this.state.displayData) {
         this.setLocalState()

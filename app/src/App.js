@@ -19,7 +19,10 @@ const App = () => {
       <AggregationButton />
       <NewSlider />
       <div style={{float: 'left', width: '600px', height: '400px'}}>
-      <BarChart id="chart2" width={550} height={400} top={40} bottom={80} left={80} right={80} dataset="species"/>
+      <BarChart id="species" width={550} height={400} top={40} bottom={80} left={80} right={80} dataset="species"/>
+      </div>
+      <div style={{float: 'left', width: '600px', height: '400px'}}>
+      <BarChart id="state" width={550} height={400} top={40} bottom={80} left={80} right={80} dataset="state"/>
       </div>
     </div>
   )
