@@ -58,6 +58,7 @@ class BarChart extends React.Component {
         });
     };
 
+    /* We can remove this right? */
     setLocalState() {
         this.setState({
             species: [...this.data.species].sort((a, b) => b.value - a.value),

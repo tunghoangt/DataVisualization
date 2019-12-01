@@ -21,13 +21,20 @@ class Loader {
     this.filters[key] = value
   }
 
+  // TODO: add usState filtration & remove use of AFS Name
   loadData() {
     return d3.csv(landings).then( data => {
       const filteredByYear = this.filterByKey("Year", data)
-      const aggData = filteredByYear.map(x => [x["State"], x[this.filters.aggregateBy]])
+      const stateAggData = filteredByYear.map(x => [x["State"], x[this.filters.aggregateBy]])
                                     .filter(this.filterNaN)
                                     .reduce(this.sumByKey, {})
-      return aggData;
+      const speciesAggData = filteredByYear.map(x => [x["AFS Name"], x[this.filters.aggregateBy]])
+                                           .filter(this.filterNaN)
+                                           .reduce(this.sumByKey, {})
+      return {
+        byState: stateAggData,
+        bySpecies: speciesAggData
+      };
     }).catch( err => {
       throw err
     })
