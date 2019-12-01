@@ -10,14 +10,15 @@ import { connect } from 'react-redux';
 const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 const format = d3.format(",");
 
+// TODO: clean up visualization
 /**
   * A bar chart which subscribes to changes in the redux store but doesn't dispatch actions.
   */
-// TODO: this only needs one dataset in state b/c we're creating two of these (one for species one for state)
 class BarChart extends React.Component {
 
     constructor(props) {
         super(props);
+        // TODO: remove this dummy data when successfully getting default dataset
         this.data = {
           usState: 'New York',
           unit: 'Pounds',
@@ -32,18 +33,15 @@ class BarChart extends React.Component {
           ]
         };
 
-        // TODO: how do we provide the default dataset?
+        // TODO: how do we provide the default dataset from the store?
         this.state = {
-            whichData: "species", // or "state"
+            whichData: props.dataset,
             stateData: null,
             speciesData: null,
             usState: "all",
             unit: "Pounds",
             year: "all",
-            displayData: null,
-            data: this.data,
-            sort: true,
-            species: [...this.data.species].sort((a, b) => b.value - a.value),
+            displayData: this.data.species,
             xScale : d3
                 .scaleBand()
                 .range([0, this.props.width - this.props.left - this.props.right])
@@ -59,14 +57,19 @@ class BarChart extends React.Component {
         store.subscribe(() => {
           store.getState().then(
             dataObj => {
+              // TODO: you're not actually using the full datasets here, so can drop
               Object.keys(dataObj).map( key =>
                 this.setState({[key]: dataObj[key]})
               )
-            this.setState({displayData: this.getTopN(dataObj.speciesData, 5)}) // TODO: should be a flag 
+              let dataset = props.dataset === "species" ? dataObj.speciesData : dataObj.stateData
+              this.setState({displayData: this.getTopN(dataset, 6)})
             },
             error => console.log('Something went wrong.')
           )
         });
+
+        this.drawChart = this.drawChart.bind(this);
+        this.plot = this.plot.bind(this);
     };
 
     getTopN(data, n) {
@@ -96,12 +99,10 @@ class BarChart extends React.Component {
         })
     };
 
-    // TODO: this needs to check & update when global state changes
-    // first time around this is null
+    // TODO: should check prevProps
     componentDidUpdate() {
       this.drawChart();
     };
-
 
     plot(chart, width, height) {
 
@@ -112,7 +113,7 @@ class BarChart extends React.Component {
                     .style("opacity", 0);
 
         chart.selectAll('.bar')
-             .data(this.data.species)
+             .data(this.state.displayData)
              .enter()
              .append('rect')
              .classed('bar', true)
@@ -125,7 +126,7 @@ class BarChart extends React.Component {
                 div.transition()
                    .duration(200)
                    .style("opacity", .9);
-                div.html("Spec: "+ d.name + "<br/> Value: "+ d.value + "</br> State: " + this.state.usState +"<br/>Year: "  + this.data.year)
+                div.html("Spec: "+ d.name + "<br/> Value: "+ d.value + "</br> State: " + this.state.usState +"<br/>Year: "  + this.state.year)
                    .style("left", (d3.event.pageX) + "px")
                    .style("top", (d3.event.pageY - 28) + "px");
              })
@@ -136,7 +137,7 @@ class BarChart extends React.Component {
              });
 
        chart.selectAll('.bar-label')
-            .data(this.data.species)
+            .data(this.state.displayData)
             .enter()
             .append('text')
             .classed('bar-label', true)
@@ -219,7 +220,6 @@ class BarChart extends React.Component {
         return this.drawChart()
     }
 
-    // TODO: add s.t. it shows the chart!
     render() {
         return (
           <div id={this.props.id}>
