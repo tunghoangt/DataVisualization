@@ -9,14 +9,14 @@ class AggregationButton extends React.Component {
     super(props)
     this.handleChange = this.handleChange.bind(this)
     this.state = {
-      aggregateBy: "Pounds"
+      unit: "Pounds"
     }
   }
 
   handleChange = (event) => {
     const unit = event.target.value
     this.setState({
-      aggregateBy: unit
+      unit: unit
     })
     this.props.dispatch(changeUnit(unit))
   }
@@ -29,7 +29,7 @@ class AggregationButton extends React.Component {
             <input
               type='radio'
               value='Pounds'
-              checked={this.state.aggregateBy === "Pounds"}
+              checked={this.state.unit === "Pounds"}
               onChange={this.handleChange}
             />
             Pounds
@@ -41,7 +41,7 @@ class AggregationButton extends React.Component {
             <input
               type='radio'
               value='Dollars'
-              checked={this.state.aggregateBy === 'Dollars'}
+              checked={this.state.unit === 'Dollars'}
               onChange={this.handleChange}
             />
             Dollars

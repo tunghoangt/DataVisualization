@@ -32,8 +32,8 @@ class Loader {
                                            .filter(this.filterNaN)
                                            .reduce(this.sumByKey, {})
       return {
-        byState: stateAggData,
-        bySpecies: speciesAggData
+        stateData: stateAggData,
+        speciesData: speciesAggData
       };
     }).catch( err => {
       throw err

@@ -6,7 +6,7 @@ const mapStateToProps = (state) => {
     species: state.species,
     usState: state.usState,
     year: state.year,
-    aggregateBy: state.aggregateBy,
+    unit: state.unit,
     data: state.data
   }
 };

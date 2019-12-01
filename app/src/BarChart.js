@@ -13,13 +13,14 @@ const format = d3.format(",");
 /**
   * A bar chart which subscribes to changes in the redux store but doesn't dispatch actions.
   */
+// TODO: this only needs one dataset in state b/c we're creating two of these (one for species one for state)
 class BarChart extends React.Component {
 
     constructor(props) {
         super(props);
         this.data = {
           usState: 'New York',
-          aggregateBy: 'Pounds',
+          unit: 'Pounds',
           year: '2015',
           species: [
             {name: 'AMBERJACK, GREATER', value: 2000},
@@ -31,8 +32,15 @@ class BarChart extends React.Component {
           ]
         };
 
-        // TODO: how do we provide the default datas
+        // TODO: how do we provide the default dataset?
         this.state = {
+            whichData: "species", // or "state"
+            stateData: null,
+            speciesData: null,
+            usState: "all",
+            unit: "Pounds",
+            year: "all",
+            displayData: null,
             data: this.data,
             sort: true,
             species: [...this.data.species].sort((a, b) => b.value - a.value),
@@ -50,15 +58,28 @@ class BarChart extends React.Component {
 
         store.subscribe(() => {
           store.getState().then(
-            response => {
-              this.setState({data: response})
+            dataObj => {
+              Object.keys(dataObj).map( key =>
+                this.setState({[key]: dataObj[key]})
+              )
+            this.setState({displayData: this.getTopN(dataObj.speciesData, 5)}) // TODO: should be a flag 
             },
             error => console.log('Something went wrong.')
           )
         });
     };
 
-    /* We can remove this right? */
+    getTopN(data, n) {
+      let sortedKeys = Object.keys(data).sort((a, b) => data[b] - data[a])
+      let topKeys = sortedKeys.slice(0,n)
+      let topN = topKeys.reduce((l, key) => {
+        let newObj = {name: key, value: data[key]}
+        l.push(newObj)
+        return l
+      }, [])
+      return topN
+    }
+
     setLocalState() {
         this.setState({
             species: [...this.data.species].sort((a, b) => b.value - a.value),
@@ -75,12 +96,10 @@ class BarChart extends React.Component {
         })
     };
 
-    componentDidUpdate(prevProps) {
-        if(this.state.usState !== prevProps.usState || this.state.aggregateBy !== prevProps.aggregateBy
-            || this.state.year !== prevProps.year || this.state.species !== prevProps.state.species){
-            this.setLocalState();
-        }
-        this.drawChart();
+    // TODO: this needs to check & update when global state changes
+    // first time around this is null
+    componentDidUpdate() {
+      this.drawChart();
     };
 
 
@@ -106,7 +125,7 @@ class BarChart extends React.Component {
                 div.transition()
                    .duration(200)
                    .style("opacity", .9);
-                div.html("Spec: "+ d.name + "<br/> Value: "+ d.value +"</br> State: " + this.data.usState +"<br/>Year: "  + this.data.year)
+                div.html("Spec: "+ d.name + "<br/> Value: "+ d.value + "</br> State: " + this.state.usState +"<br/>Year: "  + this.data.year)
                    .style("left", (d3.event.pageX) + "px")
                    .style("top", (d3.event.pageY - 28) + "px");
              })
@@ -163,7 +182,7 @@ class BarChart extends React.Component {
              .attr('fill', '#000')
              .style('font-size', '20px')
              .style('text-anchor', 'middle')
-             .text('Production in '+ this.data.aggregateBy + ", " + this.data.year);
+             .text('Production in '+ this.state.unit + ", " + this.state.year);
 
         const yGridlines = d3.axisLeft()
                              .scale(this.state.yScale)
