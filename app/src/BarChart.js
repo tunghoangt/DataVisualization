@@ -4,8 +4,8 @@
 import React from "react";
 import * as d3 from "d3";
 import mapStateToProps from './redux/helpers';
+import store from './redux/store';
 import { connect } from 'react-redux';
-
 
 const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 const format = d3.format(",");
@@ -17,10 +17,6 @@ class BarChart extends React.Component {
 
     constructor(props) {
         super(props);
-        this.species = [1,2,4,5,10];
-        this.usState = "NY";
-        this.year = 2017;
-        this.aggregateBy = "species";
         this.data = {
           usState: 'New York',
           aggregateBy: 'Pounds',
@@ -35,6 +31,7 @@ class BarChart extends React.Component {
           ]
         };
 
+        // TODO: how do we provide the default datas
         this.state = {
             data: this.data,
             sort: true,
@@ -50,12 +47,15 @@ class BarChart extends React.Component {
                 .range([this.props.height - this.props.top - this.props.bottom, 0])
                 .domain([0, d3.max(this.data.species, d => d.value)])
         };
-        //
-        // store.subscribe(() => {
-        //   this.setState({
-        //     data: store.data
-        //   })
-        // });
+
+        store.subscribe(() => {
+          store.getState().then(
+            response => {
+              this.setState({data: response})
+            },
+            error => console.log('Something went wrong.')
+          )
+        });
     };
 
     setLocalState() {
