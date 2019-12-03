@@ -180,7 +180,7 @@ class BarChart extends React.Component {
              .append('text')
              .attr('x', 0)
              .attr('y', 0)
-             .attr('transform', `translate(-50, ${height/2}) rotate(-90)`)
+             .attr('transform', `translate(190, ${height-300}) rotate(0)`)
              .attr('fill', '#000')
              .style('font-size', '20px')
              .style('text-anchor', 'middle')
