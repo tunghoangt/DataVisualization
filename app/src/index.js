@@ -1,14 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import { Provider } from 'react-redux';
+import store from './redux/store';
 import App from './App';
-import DataHandler from './DataHandler'
-// import * as serviceWorker from './serviceWorker';
 
-// ReactDOM.render(<App />, document.getElementById('root'));
-ReactDOM.render(<DataHandler />, document.getElementById('root'));
+/**
+  * http://thecodebarbarian.com/async-await-with-react-and-redux-thunk
+  * https://github.com/pburtchaell/redux-promise-middleware/blob/master/docs/guides/reducers.md
+  * https://redux.js.org/advanced/async-actions
+  * https://redux.js.org/advanced/example-reddit-api
+  * https://redux.js.org/advanced/middleware
+  * https://codebrahma.com/structuring-async-operations-react-redux-applications/
+  * https://putridparrot.com/blog/promises-within-your-redux-code/
+  * https://react-redux.js.org/using-react-redux/connect-mapdispatch
+  */
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-// serviceWorker.unregister();
+const rootElement = document.getElementById('root');
+
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  rootElement
+)
