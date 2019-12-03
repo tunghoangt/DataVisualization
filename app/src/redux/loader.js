@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import landings from '../data/landings.csv';
+import landings from '../data/clean_landings.csv';
 
 class Loader {
 
@@ -28,7 +28,7 @@ class Loader {
       const stateAggData = filteredByYear.map(x => [x["State"], x[this.filters.aggregateBy]])
                                     .filter(this.filterNaN)
                                     .reduce(this.sumByKey, {})
-      const speciesAggData = filteredByYear.map(x => [x["AFS Name"], x[this.filters.aggregateBy]])
+      const speciesAggData = filteredByYear.map(x => [x["Species"], x[this.filters.aggregateBy]])
                                            .filter(this.filterNaN)
                                            .reduce(this.sumByKey, {})
       return {
