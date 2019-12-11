@@ -1,12 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-<<<<<<< HEAD
-import BarChartApp from './BarChartApp';
-// import * as serviceWorker from './serviceWorker';
-
-ReactDOM.render(<BarChartApp />, document.getElementById('root'));
-=======
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import App from './App';
@@ -21,7 +15,6 @@ import App from './App';
   * https://putridparrot.com/blog/promises-within-your-redux-code/
   * https://react-redux.js.org/using-react-redux/connect-mapdispatch
   */
->>>>>>> master
 
 const rootElement = document.getElementById('root');
 
