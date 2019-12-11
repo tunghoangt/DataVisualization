@@ -1,8 +1,11 @@
 import React, { Component } from "react";
+import { changeYear } from './redux/actions';
+import mapStateToProps from './redux/helpers';
+import { connect } from 'react-redux';
 import { render } from "react-dom";
 import { Slider, Rail, Handles, Tracks, Ticks } from "react-compound-slider";
-import { SliderRail, Handle, Track, Tick } from "./components"; // example render components - source below
-import { format} from "date-fns";
+import { Handle, Track, Tick } from "./SliderComponents";
+import { format } from "date-fns";
 import { scaleTime } from "d3-scale";
 
 const sliderStyle = {
@@ -10,16 +13,28 @@ const sliderStyle = {
   width: "100%"
 };
 
+const railStyle = {
+  position: "absolute",
+  width: "100%",
+  height: 8,
+  borderRadius: 4,
+  cursor: "pointer",
+  backgroundColor: "rgb(100,100,100)"
+};
+
+
 function formatTick(ms) {
   return format(new Date(ms), "yyyy");
 }
 
 const oneYear = 1000 * 60 * 60 * 24 * 365;
 
-// Time
+/**
+  * A slider which controls the year (dispatchs actions), but does not subscribe to redux store.
+  */
 class NewSlider extends Component {
-	constructor() {
-	    super();
+	constructor(props) {
+	    super(props);
 
 	   	const defaultYear = new Date(1950, 3, 3);
 	    const startYear = new Date(1950, 3, 3);
@@ -31,21 +46,29 @@ class NewSlider extends Component {
 	      min: startYear,
 	      max: endYear
 	    };
-	    
+
 	  	this.onChange = this.onChange.bind(this)
+      this.onUpdate = this.onUpdate.bind(this)
 	  }
 
-
 	  onChange = ([ms]) => {
+      let date = new Date(ms)
 	    this.setState({
-	      selected: new Date(ms)
+	      selected: date
 	    });
+
+      let year = date.getFullYear()
+      this.props.dispatch(changeYear(year))
 	  };
 
 	  onUpdate = ([ms]) => {
+      let date = new Date(ms)
 	    this.setState({
-	      updated: new Date(ms)
+	      updated: date
 	    });
+
+      let year = date.getFullYear()
+      this.props.dispatch(changeYear(year))
 	  };
 
 	  renderDateTime(date, header) {
@@ -84,9 +107,11 @@ class NewSlider extends Component {
 	            onChange={this.onChange}
 	            values={[+selected]}
 	          >
-	            <Rail>
-	              {({ getRailProps }) => <SliderRail getRailProps={getRailProps} />}
-	            </Rail>
+            <Rail>
+              {({ getRailProps }) => (
+                <div style={railStyle} {...getRailProps()} />
+              )}
+            </Rail>
 	            <Handles>
 	              {({ handles, getHandleProps }) => (
 	                <div>
@@ -136,4 +161,4 @@ class NewSlider extends Component {
 	  }
 }
 
-export default NewSlider
+export default connect(mapStateToProps)(NewSlider)
