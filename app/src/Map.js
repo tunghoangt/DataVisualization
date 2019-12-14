@@ -11,16 +11,7 @@ class Map extends Component {
     super(props);
     this.state = {
       unit: "Pounds",
-      year: "all",
-      displayData: store.getState().then(
-        dataObj => {
-          Object.keys(dataObj).map( key =>
-            this.setState({[key]: dataObj[key]})
-          )
-          return dataObj.stateData
-        },
-        error => console.log('Something went wrong')
-      )
+      year: "all"
     }
     this.geoFeatures = features.features
     this.height = 500
@@ -32,43 +23,59 @@ class Map extends Component {
     store.subscribe(() => this.getDataFromStore());
     this.getDataFromStore = this.getDataFromStore.bind(this);
     this.drawMap = this.drawMap.bind(this);
-    this.drawMap()
   }
 
   getDataFromStore() {
-    store.getState().then(
+    let data = store.getState().then(
       dataObj => {
         Object.keys(dataObj).map( key =>
           this.setState({[key]: dataObj[key]})
         )
         this.setState({displayData: dataObj.stateData})
+        return dataObj.stateData
       },
       error => console.log('Something went wrong.')
     )
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    // TODO: there are several other fields getting returned here? clean up
-    if (prevState.unit !== this.state.unit || prevState.year !== this.state.year) {
-      this.getDataFromStore()
-    }
-    this.drawMap()
+    return data
   }
 
   componentDidMount() {
-    this.getDataFromStore()
-    this.drawMap()
+    this.drawMap(this.state.displayData)
   }
 
-  // calculateSaturation(d) {
-  //  get max
-  //  represent as % of max
-  // }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.unit !== this.state.unit || prevState.year !== this.state.year) {
+      this.drawMap(this.state.displayData)
+    }
+  }
 
   drawMap() {
+    let data = this.state.displayData
+    let maxVal = 1.0
+    if (typeof data !== 'undefined') {
+      for (let [key, value] of Object.entries(data)) {
+        maxVal = Math.max(maxVal, value)
+      }
+    }
+
     const pathGenerator = d3.geoPath(this.projection)
-    const stateMap = this.geoFeatures.map( (d, i) =>
-      <path key={"path" + i} d={pathGenerator(d)} className="states"/>
+    let stateVal = -1.0
+    const stateMap = this.geoFeatures.map( (stateObj, i) => {
+      let stateName = stateObj.properties.name.toUpperCase()
+      if (typeof data !== 'undefined') {
+        if (typeof data[stateName] !== 'undefined') {
+          stateVal = data[stateName]
+        }
+      }
+      let opacity = stateVal > 0.0 ? (stateVal / maxVal).toString() : "1"
+      return <path key={"path" + i}
+                   d={pathGenerator(stateObj)}
+                   className="states"
+                   stroke="black"
+                   fill="red"
+                   opacity={opacity}
+             />
+      }
     )
     return <svg width={this.width} height={this.height}>{stateMap}</svg>
   }
@@ -76,7 +83,7 @@ class Map extends Component {
   render() {
     return(
       <div id="Map">
-      {this.drawMap()}
+        {this.drawMap()}
       </div>
     )
   }
