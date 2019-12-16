@@ -10,7 +10,6 @@ import { connect } from 'react-redux';
 const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 const format = d3.format(",");
 
-// TODO: clean up visualization
 /**
   * A bar chart which subscribes to changes in the redux store but doesn't dispatch actions.
   */
@@ -18,7 +17,8 @@ class BarChart extends React.Component {
 
     constructor(props) {
         super(props);
-        // TODO: remove this dummy data when successfully getting default dataset
+        this.getDataFromStore();
+        // TODO: this is dummy data
         this.data = {
           usState: 'New York',
           unit: 'Pounds',
@@ -33,7 +33,6 @@ class BarChart extends React.Component {
           ]
         };
 
-        // TODO: how do we provide the default dataset from the store?
         this.state = {
             whichData: props.dataset,
             stateData: null,
@@ -41,7 +40,16 @@ class BarChart extends React.Component {
             usState: "all",
             unit: "Pounds",
             year: "all",
-            displayData: this.data.species,
+            displayData: store.getState().then(
+              dataObj => {
+                Object.keys(dataObj).map( key =>
+                  this.setState({[key]: dataObj[key]})
+                )
+                let dataset = props.dataset === "species" ? dataObj.speciesData : dataObj.stateData
+                this.setState({displayData: this.getTopN(dataset, 6)})
+              },
+              error => console.log('Something went wrong.')
+            ),
             xScale : d3
                 .scaleBand()
                 .range([0, this.props.width - this.props.left - this.props.right])
@@ -54,23 +62,24 @@ class BarChart extends React.Component {
                 .domain([0, d3.max(this.data.species, d => d.value) * 1.5])
         };
 
-        store.subscribe(() => {
-          store.getState().then(
-            dataObj => {
-              // TODO: you're not actually using the full datasets here, so can drop
-              Object.keys(dataObj).map( key =>
-                this.setState({[key]: dataObj[key]})
-              )
-              let dataset = props.dataset === "species" ? dataObj.speciesData : dataObj.stateData
-              this.setState({displayData: this.getTopN(dataset, 6)})
-            },
-            error => console.log('Something went wrong.')
-          )
-        });
+        store.subscribe(() => this.getDataFromStore());
 
         this.drawChart = this.drawChart.bind(this);
         this.plot = this.plot.bind(this);
     };
+
+    getDataFromStore() {
+      store.getState().then(
+        dataObj => {
+          Object.keys(dataObj).map( key =>
+            this.setState({[key]: dataObj[key]})
+          )
+          let dataset = this.props.dataset === "species" ? dataObj.speciesData : dataObj.stateData
+          this.setState({displayData: this.getTopN(dataset, 6)})
+        },
+        error => console.log('Something went wrong.')
+      )
+    }
 
     getTopN(data, n) {
       let sortedKeys = Object.keys(data).sort((a, b) => data[b] - data[a])
@@ -184,7 +193,7 @@ class BarChart extends React.Component {
              .attr('fill', '#000')
              .style('font-size', '20px')
              .style('text-anchor', 'middle')
-             .text('Production in '+ this.state.unit + ", " + this.state.year);
+             .text('Production in '+ this.state.unit + ", " + this.state.year + ", by " + this.state.whichData);
 
         const yGridlines = d3.axisLeft()
                              .scale(this.state.yScale)
